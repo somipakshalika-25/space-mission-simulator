@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPACE MISSION SIMULATOR | Design, Launch & Explore</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- KaTeX for formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Custom Styling -->
+  <link rel="stylesheet" href="/static/style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            spaceDark: '#070b19',
+            spaceSurface: '#0e152e',
+            spaceCard: '#131b39',
+            cyanGlow: '#00f0ff',
+            blueNeon: '#3b82f6',
+            purpleGlow: '#8b5cf6',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-spaceDark text-slate-100 min-h-screen flex flex-col font-sans select-none">
+  <!-- Dynamic Background Canvas -->
+  <canvas id="starfield-canvas" class="stars-bg"></canvas>
+  <div class="grid-overlay"></div>
+
+  <!-- Global Navigation Header -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-blue-900/40 px-4 py-3 flex items-center justify-between shadow-2xl">
+    <div class="flex items-center space-x-3 cursor-pointer" onclick="app.navigate('home')">
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+        <i data-lucide="rocket" class="w-6 h-6 text-white"></i>
+      </div>
+      <div>
+        <div class="font-extrabold tracking-widest text-lg bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
+          SPACE MISSION SIMULATOR
+        </div>
+        <div class="text-[10px] tracking-wider text-slate-400 uppercase flex items-center space-x-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 telemetry-live"></span>
+          <span>FLIGHT SYSTEMS NOMINAL</span>
+          <span class="text-slate-600">•</span>
+          <span id="header-callsign">CDR. ROOKIE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Pills -->
+    <nav class="hidden md:flex items-center space-x-1 bg-spaceDark/60 p-1.5 rounded-xl border border-blue-900/50">
+      <button onclick="app.navigate('home')" id="nav-btn-home" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-blue-600/20">
+        Home
+      </button>
+      <button onclick="app.navigate('missions')" id="nav-btn-missions" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-blue-600/20">
+        Missions
+      </button>
+      <button onclick="app.navigate('design')" id="nav-btn-design" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-blue-600/20">
+        Vessel Builder
+      </button>
+      <button onclick="app.navigate('launcher')" id="nav-btn-launcher" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-blue-600/20">
+        Booster Selection
+      </button>
+      <button onclick="app.navigate('planning')" id="nav-btn-planning" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-blue-600/20">
+        Flight Plan
+      </button>
+      <button onclick="app.navigate('simulation')" id="nav-btn-simulation" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-blue-600/20">
+        Live Mission
+      </button>
+      <button onclick="app.navigate('academy')" id="nav-btn-academy" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-blue-600/20">
+        Academy
+      </button>
+      <button onclick="app.navigate('leaderboard')" id="nav-btn-leaderboard" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-blue-600/20">
+        Leaderboard
+      </button>
+    </nav>
+
+    <!-- Pilot Profile & XP Counter -->
+    <div class="flex items-center space-x-3">
+      <div class="hidden sm:flex flex-col text-right">
+        <span class="text-xs text-slate-400">COMMAND XP</span>
+        <span id="player-xp-display" class="text-sm font-bold text-cyan-400 tracking-wider">0 XP</span>
+      </div>
+      <button onclick="app.openProfileModal()" class="w-9 h-9 rounded-full bg-blue-950 border border-cyan-500/40 hover:border-cyan-400 flex items-center justify-center text-cyan-300 transition-all hover:scale-105 shadow-md shadow-cyan-900/30">
+        <i data-lucide="user" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main id="app-container" class="flex-1 w-full max-w-7xl mx-auto p-4 md:p-6 relative z-10">
+    <!-- Views rendered dynamically via app.js -->
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="glass-panel border-t border-blue-900/30 py-4 px-6 text-xs text-slate-400 flex flex-col md:flex-row items-center justify-between gap-2 mt-auto z-10">
+    <div class="flex items-center space-x-2">
+      <i data-lucide="satellite" class="w-4 h-4 text-cyan-400"></i>
+      <span>Space Mission Simulator v2.4 • Flight Telemetry & Aerospace Mechanics Engine</span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <span class="text-slate-500">Physics: Tsiolkovsky $\Delta v$ + Keplerian Orbit + Inverse-Square Solar</span>
+      <button onclick="app.navigate('academy')" class="text-cyan-400 hover:underline">Aerospace Primer</button>
+    </div>
+  </footer>
+
+  <!-- Modal Container -->
+  <div id="modal-container" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div id="modal-content" class="glass-panel-glow rounded-2xl max-w-lg w-full p-6 relative border border-cyan-500/40 shadow-2xl">
+      <!-- Injected modal content -->
+    </div>
+  </div>
+
+  <!-- Core Scripts -->
+  <script src="/static/catalog.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
