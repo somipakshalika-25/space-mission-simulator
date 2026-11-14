@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🚀 Space Mission Simulator – Design, Launch & Explore
 
 An interactive, aerospace-grade space mission simulation platform built for students, developers, and space enthusiasts. Act as a Space Mission Director: manage finite budgets, balance payload masses, configure real-world electrical/propulsion systems, plot transfer orbits, and command live missions through unexpected deep-space anomalies.
@@ -82,3 +83,6 @@ Navigate to `http://127.0.0.1:8000` in your web browser.
 
 ## 📄 License
 MIT License. Feel free to use, modify, and distribute for educational and non-commercial purposes.
+=======
+# space-mission-simulator
+>>>>>>> e57e66c0bd8ed7e019c9fd00a52b6e63cd907848
